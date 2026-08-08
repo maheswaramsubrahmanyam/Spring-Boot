@@ -160,7 +160,10 @@ public interface BookRepository {
 package com.example.goodreads;
 
 import java.util.*;
-
+import com.example.goodreads.Books;
+import com.example.goodreads.BookRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 public class BookService implements BookRepository {
 
     private HashMap<Integer, Books> hmap = new HashMap<>();
@@ -171,18 +174,28 @@ public class BookService implements BookRepository {
 
         hmap.put(b1.getId(), b1);
         hmap.put(b2.getId(), b2);
+
     }
 
     @Override
     public ArrayList<Books> getBooks() {
         Collection<Books> bookCollection = hmap.values();
-        return new ArrayList<>(bookCollection);
+        ArrayList<Books> books = new ArrayList<>(bookCollection);
+        return books;
+
     }
 
     @Override
     public Books getBookById(int bookId) {
-        return hmap.get(bookId);
+        Books book = hmap.get(bookId);
+        if (book == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+
+        }
+        return book;
+
     }
+
 }
 ```
 
